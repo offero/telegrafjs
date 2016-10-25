@@ -1,4 +1,5 @@
 {
+  "author": "Chris Kirkos",
   "name": "telegrafjs",
   "version": "0.1.0",
   "description": "Telegraf/InfluxDB TCP/UDP client.",
@@ -6,10 +7,14 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "repository": "offero/telegrafjs",
   "keywords": [
     "telegraf",
-    "influxdb"
+    "influxdb",
+    "metrics"
   ],
-  "author": "Chris Kirkos",
+  "engines": {
+      "node": ">=0.12.0"
+  },
   "license": "Apache-2.0"
 }

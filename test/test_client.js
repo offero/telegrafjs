@@ -17,12 +17,12 @@
 */
 
 const assert = require('assert');
-const measurement = require('../lib/measurement');
-const Measurement = measurement.Measurement;
-const Int = measurement.Int;
-const Float = measurement.Float;
-const TelegrafUDPClient = require('../lib').TelegrafUDPClient;
-const TelegrafTCPClient = require('../lib').TelegrafTCPClient;
+const telegraf = require('telegrafjs');
+const Measurement = telegraf.Measurement;
+const Int = telegraf.Int;
+const Float = telegraf.Float;
+const TelegrafUDPClient = telegraf.TelegrafUDPClient;
+const TelegrafTCPClient = telegraf.TelegrafTCPClient;
 
 var counter = 0;
 function makeTestMeasurement() {
