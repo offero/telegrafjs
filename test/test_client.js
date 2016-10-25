@@ -24,17 +24,24 @@ const Float = measurement.Float;
 const TelegrafUDPClient = require('../lib').TelegrafUDPClient;
 const TelegrafTCPClient = require('../lib').TelegrafTCPClient;
 
+var counter = 0;
+function makeTestMeasurement() {
+    counter++;
+    let integer_field = counter;
+    let m1 = new Measurement(
+        "metric-name",
+        {tag1: "tagval1"},
+        {
+            integer_field: new Int(integer_field), float_field: new Float(10.1),
+            boolean_field: true, string_field: "yoohoo"
+        }
+    );
+    return m1;
+}
+
 function connectSendClose() {
     for(let client of [new TelegrafUDPClient(), new TelegrafTCPClient()]) {
-        var m1 = new Measurement(
-            "metric-name",
-            {tag1: "tagval1"},
-            {
-                integer_field: new Int(10), float_field: new Float(10.1),
-                boolean_field: true, string_field: "yoohoo"
-            }
-        );
-
+        let m1 = makeTestMeasurement();
         client.connect()
         .then(() => {
             console.log("connected");
@@ -55,4 +62,20 @@ function connectSendClose() {
     }
 }
 
+function sendWithoutConnectingFirst() {
+    let tcpclient = new TelegrafTCPClient();
+    tcpclient.sendMeasurement(makeTestMeasurement())
+    .then(() => {
+        tcpclient.close();
+    });
+
+    let udpclient = new TelegrafUDPClient();
+    udpclient.sendMeasurement(makeTestMeasurement())
+    .then(() => {
+        console.log("Sent");
+        udpclient.close();
+    });
+}
+
 connectSendClose();
+sendWithoutConnectingFirst();
