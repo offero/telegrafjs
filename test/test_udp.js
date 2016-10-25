@@ -21,38 +21,38 @@ const measurement = require('../lib/measurement');
 const Measurement = measurement.Measurement;
 const Int = measurement.Int;
 const Float = measurement.Float;
-const udp = require('../lib/udp');
-const TelegrafUDPClient = udp.TelegrafUDPClient;
+const TelegrafUDPClient = require('../lib').TelegrafUDPClient;
+const TelegrafTCPClient = require('../lib').TelegrafTCPClient;
 
 function connectSendClose() {
-    let client = new TelegrafUDPClient();
+    for(let client of [new TelegrafUDPClient(), new TelegrafTCPClient()]) {
+        var m1 = new Measurement(
+            "metric-name",
+            {tag1: "tagval1"},
+            {
+                integer_field: new Int(10), float_field: new Float(10.1),
+                boolean_field: true, string_field: "yoohoo"
+            }
+        );
 
-    var m1 = new Measurement(
-        "metric-name",
-        {tag1: "tagval1"},
-        {
-            integer_field: new Int(10), float_field: new Float(10.1),
-            boolean_field: true, string_field: "yoohoo"
-        }
-    );
-
-    client.connect()
-    .then(() => {
-        console.log("connected");
-        return client.sendMeasurement(m1);
-    })
-    .then(res => {
-        console.log("Success");
-        return client.close();
-    })
-    .then(() => {
-        console.log("Done");
-    })
-    .catch(err => {
-        console.error(err);
-        console.error(err.stack);
-        assert(false, err);
-    });
+        client.connect()
+        .then(() => {
+            console.log("connected");
+            return client.sendMeasurement(m1);
+        })
+        .then(res => {
+            console.log("Success");
+            return client.close();
+        })
+        .then(() => {
+            console.log("Done");
+        })
+        .catch(err => {
+            console.error(err);
+            console.error(err.stack);
+            assert(false, err);
+        });
+    }
 }
 
 connectSendClose();
